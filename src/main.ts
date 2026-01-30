@@ -80,16 +80,19 @@ async function bootstrap() {
     }),
   );
 
-  // CORS configuration
-  const corsOrigins = configService.get('CORS_ORIGINS')?.split(',') || [
-    'http://localhost:3000',
-  ];
-
+  // CORS configuration: allow all origins and domains
   app.enableCors({
-    origin: corsOrigins,
+    origin: true, // allow any origin (reflects request origin when credentials: true)
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-CSRF-Token'],
+    methods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Requested-With',
+      'X-CSRF-Token',
+      'Accept',
+      'Origin',
+    ],
   });
 
   // Global pipes
@@ -172,7 +175,7 @@ async function bootstrap() {
   logger.log(`🔗 Backend server: http://localhost:${port}`);
   logger.log(`📚 API documentation: http://localhost:${port}/api/docs`);
   logger.log(`🔢 API version: v1 (base path: /api/v1)`);
-  logger.log(`🔒 CORS enabled for: ${corsOrigins.join(', ')}`);
+  logger.log(`🔒 CORS enabled for all origins`);
   logger.log(`📡 Casdoor endpoint: ${configService.get('CASDOOR_ENDPOINT')}`);
 }
 
